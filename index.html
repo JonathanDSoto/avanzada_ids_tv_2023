@@ -2,7 +2,7 @@
     <head>
         <style>
             canvas{
-                background-color: gray; 
+                background-color: white; 
             }
             body{
                 background-color: black;
@@ -18,8 +18,64 @@
         <img src="marinero.png" id="mi_imagen" style="display: none;" alt="">
 
         <script>
+            
+            
             var canvas = document.getElementById('myCanvas');
             var ctx = canvas.getContext('2d');
+            var fig = true;
+            var color = randomRgbColor();
+            var pressed = false;
+            
+            canvas.addEventListener("mouseover", (e) => {
+                console.log("mouseover")
+
+                //color = randomRgbColor();
+                
+            })
+
+            canvas.addEventListener("mouseup", (e) => {
+                console.log("mouseup")
+
+                pressed = false;
+                
+            })
+
+            canvas.addEventListener("mouseout", (e) => {
+                console.log("mouseout")
+                fig = ((fig)?false:true);
+            }) 
+
+            canvas.addEventListener("mousedown", (e) => {
+                console.log("mousedown")
+                console.log(e)
+                pressed = true;
+                ctx.fillStyle = color;
+                if(true){  
+                    ctx.beginPath(); 
+                    ctx.arc(e.layerX,e.layerY, 50, 0, 2 * Math.PI );
+                    ctx.fill();
+                    ctx.stroke(); 
+                }else{
+
+                    ctx.fillRect(e.layerX-50,e.layerY-50,100,100);
+                    ctx.strokeRect(e.layerX-50,e.layerY-50,100,100);
+                }
+            })
+
+            /*canvas.addEventListener("mousemove", (e) => {
+                console.log("mousemove")
+                console.log(e)
+                if(pressed){ 
+                
+                    ctx.fillStyle = "black";
+
+                    ctx.beginPath(); 
+                    ctx.arc(e.layerX,e.layerY, 2, 0, 2 * Math.PI );
+                    ctx.fill(); 
+                }
+            })*/
+
+            /*
             var imagen = document.getElementById("mi_imagen")
 
             ctx.drawImage(imagen,380,20,150,150);
@@ -77,7 +133,17 @@
 
             ctx.fillStyle = grd2;
             ctx.fillRect(345,360,140,100);
+            */
 
+            function randomRgbColor() {
+                let r = randomInteger(255);
+                let g = randomInteger(255);
+                let b = randomInteger(255);
+                return "rgba("+r+","+g+","+b+",0.5)";
+            }
+            function randomInteger(max) {
+                return Math.floor(Math.random()*(max + 1));
+            } 
         </script>
     </body>
 </html>

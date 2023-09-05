@@ -22,7 +22,48 @@
             
             var canvas = document.getElementById('myCanvas');
             var ctx = canvas.getContext('2d');
-            var x = 225, y = 225, dir = 0, speed = 10;
+            var  dir = 0, speed = 10;
+            let score = 0;
+            let walls = [];
+            let pause = false;
+
+            class Cuadrado{
+
+                constructor(x,y,w,h,c){
+                    this.x = x;
+                    this.y = y;
+                    this.w = w;
+                    this.h = h;
+                    this.c = c;
+                }
+
+                paint(ctx){
+
+                    ctx.fillStyle = this.c;
+                    ctx.fillRect(this.x,this.y,this.w,this.h);
+                    ctx.strokeRect(this.x,this.y,this.w,this.h);
+
+                }
+
+                seTocan(otro){
+                    if(this.x < otro.x + otro.w &&  
+                       this.x + this.w > otro.x &&  
+                       this.y < otro.y + otro.h &&   
+                       this.y + this.h > otro.y  ) 
+                    { 
+                        return true;   
+                    }
+                    return false;
+                }
+
+            }
+
+            const player = new Cuadrado(225, 225,50,50,"black"); 
+            const target = new Cuadrado(randomInteger(460), randomInteger(460),40,40,"black");
+
+            walls.push( new Cuadrado(100,370,320,30,"gray") )
+            walls.push( new Cuadrado(100,70,320,30,"gray") )
+            walls.push( new Cuadrado(100,170,320,30,"gray") )
 
             window.requestAnimationFrame = (function () {
                 return window.requestAnimationFrame ||
@@ -35,51 +76,93 @@
             
             document.addEventListener("keydown", (e) =>{
 
-                switch(e.keyCode){ 
-                    case 87:
-                        dir = 1;
-                    break;
-                    case 83:
-                        dir = 2;
-                    break;
-                    case 68:
-                        dir = 3;
-                    break; 
-                    case 65:
-                        dir = 4;
-                    break;
+                if (!pause) {
+                    switch(e.keyCode){ 
+                        case 87:
+                            dir = 1;
+                        break;
+                        case 83:
+                            dir = 2;
+                        break;
+                        case 68:
+                            dir = 3;
+                        break; 
+                        case 65:
+                            dir = 4;
+                        break; 
+                    }  
+                }
+
+                switch(e.keyCode){  
                     case 32:
-                         speed+=5;
-                    break;
-                }  
+                         //speed+=5;
+                        pause = !pause;
+                    break;  
+                }
 
             })
 
             function update(){ 
 
-                if (dir == 1) {
-                    y-=speed;
-                    if (y+50 < 0) {
-                        y = 550;
+                if (!pause) {
+                    if (dir == 1) {
+                        player.y-=speed;
+                        if (player.y+50 < 0) {
+                            player.y = 550;
+                        }
                     }
-                }
-                if (dir == 2) {
-                    y+=speed;
-                    if (y+50 > 500) {
-                        y = -50;
+                    if (dir == 2) {
+                        player.y+=speed;
+                        if (player.y+50 > 500) {
+                            player.y = -50;
+                        }
                     }
-                }
-                if (dir == 3) {
-                    x+=speed;
-                    if (x+50 > 500) {
-                        x = -50;
+                    if (dir == 3) {
+                        player.x+=speed;
+                        if (player.x+50 > 500) {
+                            player.x = -50;
+                        }
                     }
-                }
-                if (dir == 4) {
-                    x-=speed;
-                    if (x+50 < 0) {
-                        x = 550;
+                    if (dir == 4) {
+                        player.x-=speed;
+                        if (player.x+50 < 0) {
+                            player.x = 550;
+                        }
+                    } 
+
+                    if (player.seTocan(target)) {
+
+                        target.x = randomInteger(460);
+                        target.y = randomInteger(460);
+                        score+=10
                     }
+
+                    for (var i = walls.length - 1; i >= 0; i--) { 
+
+                        if (player.seTocan(walls[i])) {
+                            
+
+                            if (dir == 1) {
+                                player.y+=speed;
+                            }
+                            if (dir == 2) {
+                                player.y-=speed;
+                            }
+                            if (dir == 3) {
+                                player.x-=speed;
+                            }
+                            if (dir == 4) {
+                                player.x+=speed;
+                            }
+                            dir = 0;
+                        }
+
+                        if (target.seTocan(walls[i])) {
+                            target.x = randomInteger(460);
+                            target.y = randomInteger(460);
+                        }
+                    } 
+
                 } 
 
                 paint(); 
@@ -91,11 +174,33 @@
             {
                 ctx.fillStyle = "white";
                 ctx.fillRect(0,0,500,500);
-                
 
-                ctx.fillStyle = randomRgbColor();
-                ctx.fillRect(x,y,50,50);
-                ctx.strokeRect(x,y,50,50);
+                ctx.font = "20px Georgia";
+                ctx.fillStyle = "black";
+                ctx.fillText("Escore: "+score, 5, 20);
+                
+                player.c = randomRgbColor();
+                player.paint(ctx); 
+
+                target.paint(ctx);
+
+                for (var i = walls.length - 1; i >= 0; i--) {
+                    walls[i].paint(ctx);
+                }
+
+                if (pause) {
+
+                    ctx.fillStyle = "rgba(154,160,154,0.5)";
+                    ctx.fillRect(0,0,500,500);
+
+                    ctx.font = "40px Georgia";
+                    ctx.fillStyle = "black";
+                    ctx.fillText("P A U S E", 185, 225);
+                }
+
+                // ctx.fillStyle = randomRgbColor();
+                // ctx.fillRect(x,y,50,50);
+                // ctx.strokeRect(x,y,50,50);
 
             }
 

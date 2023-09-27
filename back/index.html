@@ -87,6 +87,9 @@
                     <th>
                         Company Data
                     </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -103,9 +106,95 @@
                         <td>
                             {{ u.company.name }}
                         </td>
+                        <td>
+                            <button @click="edit(u)">
+                                Edit
+                            </button>
+
+                            <button type="button" @click="delete_item(u.id)">
+                                Delete {{ u.id }}
+                            </button>
+                        </td>
                     </tr>  
                 </tbody>
             </table> 
+
+            <button @click="action='new'">
+                Add new Record
+            </button>
+
+            <form style="margin-top: 15px;" v-if="action=='new'">
+                <fieldset>
+                    <legend>
+                        Name:
+                    </legend>
+
+                    <input v-model="new_record.name" type="" name="">
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Email:
+                    </legend>
+
+                    <input v-model="new_record.email" type="" name="">
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Address:
+                    </legend>
+
+                    <input v-model="new_record.street" type="" name="">
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Company:
+                    </legend>
+
+                    <input v-model="new_record.company_name" type="" name="">
+                </fieldset>
+
+                <button type="button" @click="save()">
+                    Save record
+                </button>
+            </form>
+
+            <form style="margin-top: 15px;" v-if="action=='update'">
+                <fieldset>
+                    <legend>
+                        Name:
+                    </legend>
+
+                    <input v-model="new_record.name" type="" name="">
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Email:
+                    </legend>
+
+                    <input v-model="new_record.email" type="" name="">
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Address:
+                    </legend>
+
+                    <input v-model="new_record.street" type="" name="">
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Company:
+                    </legend>
+
+                    <input v-model="new_record.company_name" type="" name="">
+                </fieldset>
+
+                <input type="hidden" v-model="new_record.id" name="">
+
+                <button type="button" @click="save()">
+                    Save record
+                </button>
+            </form>
+
         </div>
 
         <!-- 1.- creamos el form -->
@@ -177,6 +266,8 @@
 
                 email = ref('Sincere@april.biz'), password = ref('1234')
                 users = ref([])
+                new_record = ref([])
+                action = ref('')
 
                 access = ref(localStorage.getItem('is_login') ?? false);
 
@@ -184,10 +275,11 @@
                     email, 
                     password,
                     access,
-                    users
+                    users,
+                    new_record,
+                    action
                 }
             }, 
-
             async mounted(){
                 
                 const update = async () =>{
@@ -200,10 +292,7 @@
                 if (this.access) {
                     update();
                 } 
-            }, 
-
-             
-
+            },  
             methods:{
                 async login(){
 
@@ -230,6 +319,70 @@
                         alert("Verifique su información")
                     }
 
+                },
+                save()
+                {
+                    if (this.action == 'new') { 
+
+                        this.new_record.company = [];
+                        this.new_record.company.name = this.new_record.company_name;;
+
+                        this.new_record.address = [];
+                        this.new_record.address.street = this.new_record.street;
+
+                        const d = new Date();
+                        this.new_record.id = d.getMilliseconds();
+
+                        this.users.push(this.new_record)
+
+                        this.new_record = [];
+
+                        this.action = '';
+
+                        alert("El registro se ha completado correctamente")
+
+                    }
+
+                    if(this.action == 'update')
+                    {
+                        this.users.forEach( (user)=>{
+
+                            if (user.id == this.new_record.id) {
+
+                                user.name = this.new_record.name;
+                                user.email = this.new_record.email;
+                                user.address.street = this.new_record.street;
+                                user.company.name = this.new_record.company_name; 
+
+                            }
+                        })  
+                        this.action = '';
+
+                        alert("El registro se ha actualizado correctamente")
+
+                    }
+                },
+                delete_item(id)
+                {
+                    let target = 0;
+                    this.users.forEach( (user,i) =>{
+
+                        if (user.id == id) {
+                            target = i;
+                        }
+                    })
+
+                    this.users.splice(target,1);
+                },
+                edit(user)
+                {
+                    this.new_record.name = user.name;
+                    this.new_record.email = user.email;
+                    this.new_record.street = user.address.street;
+                    this.new_record.company_name = user.company.name;
+                    this.new_record.id = user.id;
+
+                    this.action = 'update'
                 }
                 
             } 

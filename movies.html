@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+	</title>
+	<link rel="stylesheet" type="text/css" href="public/css/movies.css">
+</head>
+<body>
+
+	<div class="main" id="app">
+	  <h1>Responsive Card Grid Layout</h1>
+	  <ul class="cards">
+	    
+	    <li class="cards_item" v-for="m in movies">
+	      <div class="card">
+	        <div class="card_image"><img src="https://picsum.photos/500/300/?image=10"></div>
+	        <div class="card_content">
+	          <h2 class="card_title">
+	          	{{ m.original_title }}
+	          </h2>
+	          <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+	          <button class="btn card_btn">Read More</button>
+	        </div>
+	      </div>
+	    </li>
+	     
+	  </ul>
+	</div>
+
+<h3 class="made_by">Made with ♡</h3>
+	
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<script>
+  const { createApp, ref } = Vue
+
+  createApp({
+    setup() {
+      const message = ref('Hello vue!')
+      const movies = ref([])
+      return {
+        message,
+        movies
+      }
+    },
+    async mounted(){
+                
+        const update = async () =>{
+
+        	console.log("Hola")
+            
+           var myHeaders = new Headers();
+			myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZjc0YTNmYTEyOWY1MzhhMTFhMjM4NTc4MWYxM2VkYyIsInN1YiI6IjYzMWEyMzYyMWQxYmY0MDA3ZWExMTYxMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.dS8fx1duAbpHkR4aAoKX-CfffzjPnuMM6RPfcvT5VzY");
+
+			var requestOptions = {
+			  method: 'GET',
+			  headers: myHeaders,
+			  redirect: 'follow'
+			};
+
+			fetch("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc", requestOptions)
+			  .then(response => response.json())
+			  .then(result => {
+
+			  	console.log(result)
+
+			  	this.movies = result.results
+
+			  })
+			  .catch(error => console.log('error', error));
+
+        } 
+        
+        update() 
+    },  
+    methods:{
+
+       
+    }
+  }).mount('#app')
+</script>
+</body>
+</html>

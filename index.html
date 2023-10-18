@@ -23,7 +23,7 @@
         
         <div class="col-lg-5 col-md-6 col-sm-12 align-self-center">
 
-          <form class="form-control p-5">
+          <form class="form-control p-5" method="POST" action="app/AuthController.php">
 
             <h3 class="text-center pb-4">
               Accede al panel administrador
@@ -33,7 +33,7 @@
               <label for="exampleFormControlInput1" class="form-label">
                 Correo electrónico*
               </label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" required>
+              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" required name="email">
             </div> 
 
             <div class=" g-3 align-items-center">
@@ -43,7 +43,7 @@
                 </label>
               </div>
               <div class="col-auto">
-                <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" placeholder="Escríbe aquí" required>
+                <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" placeholder="Escríbe aquí" required name="password">
               </div>
               <div class="col-auto">
                 <span id="passwordHelpInline" class="form-text">
@@ -57,6 +57,8 @@
                 Acceder
               </button>
             </div>
+
+            <input type="hidden" name="action" value="login">
 
           </form> 
           

@@ -1,3 +1,9 @@
+<?php 
+	session_start();
+	if (!isset($_SESSION['user_id'])) {
+		header("Location:index.html");
+	}
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -62,8 +68,10 @@
 				    <hr>
 				    <div class="dropdown">
 				      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-				        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-				        <strong>mdo</strong>
+				        <img src="<?= $_SESSION['avatar'] ?>" alt="" width="32" height="32" class="rounded-circle me-2">
+				        <strong>
+				        	<?= $_SESSION['name'] ?>
+				        </strong>
 				      </a>
 				      <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="">
 				        <li><a class="dropdown-item" href="#">New project...</a></li>
@@ -111,8 +119,10 @@
 					      </form>
 					      <div class="dropdown">
 						      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-						        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-						        <strong>mdo</strong>
+						        <img src="<?= $_SESSION['avatar'] ?>" alt="" width="32" height="32" class="rounded-circle me-2">
+						        <strong>
+						        	<?= $_SESSION['name'] ?>
+						        </strong>
 						      </a>
 						      <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="">
 						        <li><a class="dropdown-item" href="#">New project...</a></li>

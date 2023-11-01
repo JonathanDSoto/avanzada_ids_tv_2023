@@ -7,7 +7,7 @@
 	include "app/ProductsController.php";
 	$productsController = new ProductsController();
 
-	$products = $productsController->getProducts();
+	$main_product = $productsController->getProductBySlug($_GET['slug']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -150,29 +150,76 @@
 									
 									<h1>
 										Contenido
-									</h1>
+									</h1> 
 
 									<div class="row"> 
 									
-										<?php foreach ($products as $product): ?>
-										
-										<div class="card col-3 m-2" >
-										  <img src="<?= $product->cover ?> " class="card-img-top" alt="...">
-										  <div class="card-body">
-										    <h5 class="card-title">
-										    	
-										    	<?= $product->name ?> 
-										    </h5>
-										    <p class="card-text">
-										    	<?= $product->description ?>
-										    </p>
-										    <a href="details.php?slug=<?= $product->slug ?>" class="btn btn-primary">
-										    	Go somewhere
-										    </a>
-										  </div>
-										</div>
+										 <div class="card">
+											  <div class="card-header">
+											    Featured
+											  </div>
+											  <div class="card-body">
+											    <div class="row">
+											    	
+											    	<div class="col-4">
+											    		<div id="carouselExampleDark" class="carousel carousel-dark slide">
+														  <div class="carousel-indicators">
+														    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button> 
+														  </div>
+														  <div class="carousel-inner">
+														    <div class="carousel-item active" data-bs-interval="10000">
+														      <img src="<?= $main_product->cover ?>" class="d-block w-100" alt="...">
+														      <div class="carousel-caption d-none d-md-block">
+														        <h5>First slide label</h5>
+														        <p>Some representative placeholder content for the first slide.</p>
+														      </div>
+														    </div> 
+														  </div>
+														  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+														    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+														    <span class="visually-hidden">Previous</span>
+														  </button>
+														  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+														    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+														    <span class="visually-hidden">Next</span>
+														  </button>
+														</div>
 
-										<?php endforeach; ?>
+											    	</div>
+											    	<div class="col">
+											    		
+											    		<h5 class="card-title">
+											    			
+											    			<?= $main_product->name ?>
+											    		</h5>
+														    <p class="card-text">
+														    	
+														    	<?= $main_product->description ?>
+														    </p>
+
+														    <p class="card-text">
+														    	
+														    	<?= $main_product->features ?>
+														    </p>
+
+														    <span class="badge text-bg-success">
+														    	<?= $main_product->brand->name ?>
+														    </span>
+															
+															<?php foreach ($main_product->tags as $tag): ?>
+															<span class="badge text-bg-danger">
+																
+																<?= $tag->name ?>
+
+															</span>
+
+															<?php endforeach; ?>
+
+														    <a href="#" class="btn btn-primary">Go somewhere</a>
+											    	</div>
+											    </div>
+											  </div>
+										</div>
 
 									</div>
 								</div>
